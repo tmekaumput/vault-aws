@@ -48,7 +48,7 @@ variable "vpc_cidr" {
 
 variable "subnet_ids" {
   description = "Subnet ID(s) to provision resources in."
-  type        = "list"
+  type        = list(string)
 }
 
 variable "public" {
@@ -56,14 +56,14 @@ variable "public" {
   default     = false
 }
 
-variable "count" {
+variable "node_count" {
   description = "Number of Vault nodes to provision across private subnets, defaults to private subnet count."
   default     = -1
 }
 
 variable "instance_type" {
   description = "AWS instance type for Vault node (e.g. \"m4.large\"), defaults to \"t2.small\"."
-  default     = "t2.small"
+  default     = "t2.micro"
 }
 
 variable "image_id" {
@@ -132,7 +132,7 @@ variable "lb_logs_enabled" {
 
 variable "target_groups" {
   description = "List of target group ARNs to apply to the autoscaling group."
-  type        = "list"
+  type        = list(string)
   default     = []
 }
 
@@ -147,12 +147,19 @@ variable "users" {
 
 variable "tags" {
   description = "Optional map of tags to set on resources, defaults to empty map."
-  type        = "map"
+  type        = map(string)
   default     = {}
 }
 
 variable "tags_list" {
   description = "Optional list of tag maps to set on resources, defaults to empty list."
-  type        = "list"
-  default     = []
+  type        = list(map(string))
+  default     = [
+    {
+          "key"                 = "Name"
+          "value"               = ""
+          "propagate_at_launch" = "true"
+        }
+      ]
 }
+
